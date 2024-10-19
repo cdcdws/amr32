@@ -1,0 +1,93 @@
+
+<!DOCTYPE html public "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+	<title>Pre-Enrollment</title>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png?v=XBze87Kjmz" />
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png?v=XBze87Kjmz" />
+	<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png?v=XBze87Kjmz" />
+	<link rel="manifest" href="favicon/site.webmanifest?v=XBze87Kjmz" />
+	<link rel="mask-icon" href="favicon/safari-pinned-tab.svg?v=XBze87Kjmz" color="#5bbad5" />
+	<link rel="shortcut icon" href="favicon/favicon.ico?v=XBze87Kjmz" />
+	<meta name="apple-mobile-web-app-title" content="Q SIS" />
+	<meta name="application-name" content="Q SIS" />
+	<meta name="msapplication-TileColor" content="#2b5797" />
+	<meta name="theme-color" content="#ffffff" />
+
+	<meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=8;" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<link href="Content/Site.css" rel="stylesheet" type="text/css" />
+	<link href="Content/Themes/Default/Site.css" rel="stylesheet" type="text/css" />
+	<script src="Scripts/jquery-1.12.4.min-patched.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//attach random number to stop Startup.txt from being cached
+		var rnd = Math.random();
+		var HTML_FILE_URL = 'Startup.txt?id=' + rnd.toString();
+		$(document).ready(function () {
+			var rnd = Math.random();
+			var txtfile = 'Startup.txt?id=' + rnd.toString();
+			if (window.navigator.userAgent.indexOf("MSIE ") <= 0) {
+				var urlParams = new URLSearchParams(window.location.search);
+				var myfile = urlParams.get('id');
+				if (myfile != null) {
+					txtfile = myfile + '.txt?id=' + rnd.toString();
+				};
+			} else {
+				var myfile = getParameterByName('id');
+				if (myfile != null && myfile != '') {
+					txtfile = myfile + '.txt?id=' + rnd.toString();
+				};
+			};
+			var HTML_FILE_URL = txtfile;
+			$.get(HTML_FILE_URL, function (data) {
+				var myitemlist = data.split(String.fromCharCode(13));
+				for (var i = 0; i < myitemlist.length; i++) {
+					var myitem = myitemlist[i].split(',');
+					if (myitem.length == 2) {
+						if (i > 0) {
+							myitem[0] = myitem[0].substring(1);
+						};
+						var loginfile = "'" + myitem[1] + "'";
+						$("#loginlist tr:last").after('<tr><td align="left"><a href="javascript:openlogin(' + loginfile + ')">' + myitem[0] + '</a></td></tr>');
+					};
+				};
+			});
+		});
+		function getParameterByName(name, url) {
+			if (!url) url = window.location.href;
+			name = name.replace(/[\[\]]/g, '\\$&');
+			var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+					results = regex.exec(url);
+			if (!results) return null;
+			if (!results[2]) return '';
+			return decodeURIComponent(results[2].replace(/\+/g, ' '));
+		};
+		function openlogin(sconnectid) {
+			document.location.href = "Default.aspx?id=" + sconnectid;
+		}
+	</script>
+</head>
+<body>
+	<div style="float:left; width:500px;">
+		<br /><br />
+		<h1><img src="Images/mainlogo.png" alt="Æquitas Solutions, Inc." /></h1>
+		<br /><br /><br /><br />
+		<div style="margin-left:20px;">
+			We are unable to
+			identify the school district you are attempting to access. Please select the
+			appropriate district from the list on the right. If your district should appear on
+			the list and does not, please contact the district office.
+		</div>
+		<br /><br />
+	</div>
+	<div style="float:right; margin-right:125px; text-align:center">
+		<br /><br />
+		<h2 style="font-size: 1.17em">Please Select Your School District</h2>
+		<table id="loginlist">
+			<tr><td>&nbsp;</td></tr>
+		</table>
+	</div>
+</body>
+</html>
